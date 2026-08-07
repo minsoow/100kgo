@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python extract.py \"C:/Users/밍묭/Documents/카카오톡 받은 파일/홈페이지 구성안_0731.pdf\")",
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell($sp = \"C:\\\\Users\\\\밍묭\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users----Desktop------project-kodsa\\\\c218505d-2925-4488-a894-9c85082e66f8\\\\scratchpad\"; Move-Item \"C:\\\\Users\\\\밍묭\\\\Desktop\\\\이이공이\\\\project\\\\kodsa\\\\PLAN.md\" \"$sp\\\\PLAN.md\" -Force; \"moved\")"
+    ]
+  }
+}
