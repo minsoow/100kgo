@@ -1,0 +1,1 @@
+ALTER TYPE "public"."post_category" ADD VALUE 'support' BEFORE 'notice';

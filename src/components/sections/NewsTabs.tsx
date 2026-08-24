@@ -1,0 +1,89 @@
+"use client";
+
+import Link from "next/link";
+import { useId, useState } from "react";
+import { POST_CATEGORIES, type PostCategory } from "@/lib/db/schema";
+import { formatDate } from "@/lib/format";
+
+export type NewsItem = {
+  id: number;
+  title: string;
+  category: PostCategory;
+  createdAt: string;
+};
+
+const TABS = [
+  { value: "", label: "전체" },
+  ...Object.entries(POST_CATEGORIES).map(([value, label]) => ({ value, label })),
+];
+
+/** 홈 게시판 미리보기의 분류 탭. 게시판 페이지의 탭 구성과 동일하게 맞춥니다. */
+export function NewsTabs({ items }: { items: NewsItem[] }) {
+  const [active, setActive] = useState("");
+  const base = useId();
+
+  const filtered = (active ? items.filter((i) => i.category === active) : items).slice(
+    0,
+    5,
+  );
+
+  return (
+    <>
+      <div
+        role="tablist"
+        aria-label="게시판 분류"
+        className="mt-10 flex flex-wrap gap-2 border-b border-line"
+      >
+        {TABS.map((tab) => {
+          const selected = tab.value === active;
+          return (
+            <button
+              key={tab.value || "all"}
+              role="tab"
+              id={`${base}-${tab.value || "all"}`}
+              aria-selected={selected}
+              onClick={() => setActive(tab.value)}
+              className={`-mb-px border-b-2 px-4 py-3 text-[14px] transition-colors md:px-5 md:text-[15px] ${
+                selected
+                  ? "border-brand-500 font-bold text-brand-900"
+                  : "border-transparent font-medium text-ink-400 hover:text-ink-700"
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className="py-20 text-center text-[15px] text-ink-400">
+          등록된 게시글이 없습니다.
+        </p>
+      ) : (
+        <ul>
+          {filtered.map((post) => (
+            <li key={post.id} className="border-b border-line">
+              <Link
+                href={`/board/${post.id}`}
+                className="flex flex-col gap-2 py-6 transition-colors hover:bg-surface sm:flex-row sm:items-center sm:gap-8"
+              >
+                <span className="w-32 shrink-0 text-[13px] font-bold text-brand-600">
+                  {POST_CATEGORIES[post.category]}
+                </span>
+                <span className="flex-1 truncate text-[16px] text-ink-900 md:text-[17px]">
+                  {post.title}
+                </span>
+                <time
+                  dateTime={post.createdAt}
+                  className="shrink-0 text-[13px] tabular-nums text-ink-400"
+                >
+                  {formatDate(post.createdAt)}
+                </time>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
