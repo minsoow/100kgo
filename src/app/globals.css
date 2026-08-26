@@ -86,7 +86,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+    /* 고정 헤더 높이(h-24 = 6rem)와 맞춥니다. Header.tsx 의 HEADER_HEIGHT 참고. */
+    scroll-padding-top: 6rem;
   }
 
   body {

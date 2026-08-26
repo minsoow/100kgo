@@ -5,8 +5,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { association, navItems, BOARD_LABEL } from "@/content/association";
 
-/** 투명 상태에서의 내비 높이(px). 전환 임계값 계산에 씁니다. */
-const HEADER_HEIGHT = 80;
+/**
+ * 투명 상태에서의 내비 높이(px). 전환 임계값 계산에 씁니다.
+ *
+ * 이 값을 바꾸면 함께 맞춰야 하는 곳:
+ *   globals.css 의 scroll-padding-top, board/privacy 레이아웃의 pt-*,
+ *   Channels.tsx 의 scroll-mt-*. 전부 고정 헤더에 콘텐츠가 가리지 않게 하는 값입니다.
+ */
+const HEADER_HEIGHT = 96;
 
 type HeaderProps = {
   /**
@@ -71,7 +77,7 @@ export function Header({ variant = "overlay" }: HeaderProps) {
     >
       <div
         className={`container-page flex items-center justify-between gap-8 transition-[height] duration-300 ${
-          solid && !open ? "h-16" : "h-20"
+          solid && !open ? "h-20" : "h-24"
         }`}
       >
         <Link
@@ -84,6 +90,10 @@ export function Header({ variant = "overlay" }: HeaderProps) {
             로고 원본은 남색+초록 컬러라 어두운 배경(투명 상태) 위에서 대비가
             떨어집니다. 투명 상태에서는 흰색 단색으로 반전해 가독성을 확보하고,
             솔리드 바에서는 원래 컬러를 그대로 씁니다.
+
+            로고가 3단 조합형(심볼 / 국문 / 영문)이라 높이를 키우지 않으면
+            맨 아래 영문 줄이 뭉개집니다. 헤더 높이의 약 58% 를 차지하도록
+            잡았습니다.
           */}
           <Image
             src="/images/logo.png"
@@ -92,7 +102,7 @@ export function Header({ variant = "overlay" }: HeaderProps) {
             height={340}
             priority
             className={`w-auto transition-[height,filter] duration-300 ${
-              solid && !open ? "h-8" : "h-10"
+              solid && !open ? "h-11" : "h-14"
             } ${onDark ? "brightness-0 invert" : ""}`}
           />
         </Link>
@@ -145,7 +155,7 @@ export function Header({ variant = "overlay" }: HeaderProps) {
       {open && (
         <div
           id="mobile-nav"
-          className="fixed inset-0 -z-10 bg-brand-950 pt-24 lg:hidden"
+          className="fixed inset-0 -z-10 bg-brand-950 pt-28 lg:hidden"
         >
           <nav className="container-page flex flex-col">
             {navItems.map((item) => (
