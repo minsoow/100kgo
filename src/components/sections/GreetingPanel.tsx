@@ -8,9 +8,10 @@ import { greeting } from "@/content/association";
  *   좌측에 라운드 처리한 환경 인물사진, 우측에 "안녕하십니까," 로 시작하는
  *   굵은 2행 헤드라인 + 본문, 하단에 직함·성명 서명 블록.
  *
- * ⚠️ 현재 인물 사진은 협회장 사진이 아닙니다. 레이아웃 확인용 임시
- *    스톡 이미지(Unsplash License)이며, 협회 사진 수령 시 교체합니다.
- *    협회에 공유할 때 반드시 임시 이미지임을 함께 안내해야 합니다.
+ * 사진 슬롯이 2:3 인 이유: 협회에서 받은 원본(620 × 930)에서 인물이 y 92~877 을
+ * 차지해 4:5 로 자르면 머리 위 여백이 사라지거나 팔짱 낀 손이 잘립니다.
+ * 좌우로 배경을 늘리는 방법도 인물의 팔꿈치가 원본 프레임에 닿아 있어 쓸 수
+ * 없습니다. 원본 비율을 그대로 두고 슬롯을 맞췄습니다.
  */
 export function GreetingPanel() {
   const [firstLine, ...rest] = greeting.paragraphs;
@@ -18,19 +19,16 @@ export function GreetingPanel() {
   return (
     <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
       <figure className="lg:col-span-5">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-surface">
+        <div className="relative aspect-[2/3] overflow-hidden rounded-card bg-surface">
           <Image
             src={greeting.signature.photo ?? "/images/chairman.jpg"}
-            alt=""
-            aria-hidden
+            alt={`${greeting.signature.role} ${greeting.signature.name}`}
             fill
+            priority
             sizes="(min-width: 1024px) 38vw, 100vw"
             className="object-cover"
           />
         </div>
-        <figcaption className="mt-3 text-[12px] text-ink-400">
-          인물 사진은 레이아웃 확인용 임시 이미지입니다.
-        </figcaption>
       </figure>
 
       <div className="lg:col-span-7">

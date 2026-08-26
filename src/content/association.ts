@@ -176,9 +176,9 @@ export const greeting = {
     role: "한국온라인해외직판협회 회장",
     name: "권대욱",
     /**
-     * 협회 제공 사진.
-     * 원본은 세바시(SEBASI) 강연자 프로필 카드라 타 기관 로고·직함이 함께
-     * 들어 있어, 인물 영역만 분리해 4:5로 재구성했습니다.
+     * 협회 제공 정식 촬영본 (docs/mr_kwon.jpg, 620 × 930). 크기만 2배로 키우고
+     * 자르지 않았습니다. 슬롯 비율을 원본에 맞춘 이유는 GreetingPanel 주석 참고.
+     * 이전에 쓰던 세바시(SEBASI) 프로필 카드 가공본은 이 사진으로 대체됐습니다.
      */
     photo: "/images/chairman.jpg" as string | null,
   },
