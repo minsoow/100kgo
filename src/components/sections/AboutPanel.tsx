@@ -19,13 +19,21 @@ export function AboutPanel() {
       </h3>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:gap-16">
-        <div className="space-y-5 text-[16px] leading-[1.9] text-ink-700 lg:col-span-7 md:text-[17px]">
-          {about.paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 20)}>{paragraph}</p>
-          ))}
-        </div>
+        {/*
+          세 문단을 한 덩어리로 이어 붙입니다. 문장마다 한 줄씩 띄우면 문단당
+          한두 줄밖에 안 돼 글이 끊겨 읽힙니다. 원문은 문장 단위로 나눠
+          관리하고(association.ts) 화면에서만 이어 붙입니다.
+        */}
+        <p className="text-[16px] leading-[1.9] text-ink-700 lg:col-span-7 md:text-[17px]">
+          {about.paragraphs.join(" ")}
+        </p>
 
-        <p className="border-l-2 border-brand-500 pl-6 text-[16px] leading-[1.9] text-brand-700 lg:col-span-4 lg:col-start-9">
+        {/*
+          self-start 가 없으면 이 칸이 그리드 기본값(stretch)으로 왼쪽 본문
+          높이까지 늘어납니다. 실측 기준 바는 234px 인데 글자는 110px 이라
+          124px 이 빈 채로 남았습니다. 이제 글자 높이만큼만 그어집니다.
+        */}
+        <p className="self-start border-l-2 border-brand-500 pl-6 text-[16px] leading-[1.9] text-brand-700 lg:col-span-4 lg:col-start-9">
           {about.closing}
         </p>
       </div>
