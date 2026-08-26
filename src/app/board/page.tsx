@@ -61,7 +61,15 @@ export default async function BoardPage({ searchParams }: PageProps<"/board">) {
 
       <div className="container-page py-12 md:py-16">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <nav className="flex gap-1.5" aria-label="게시판 분류">
+          {/*
+            홈의 분류 탭과 같은 방식으로 좁은 화면에서 옆으로 넘겨 봅니다.
+            min-w-0 이 없으면 flex 부모가 이 칸을 콘텐츠 폭(364px) 밑으로
+            줄여주지 않아 페이지 전체에 가로 스크롤이 생깁니다.
+          */}
+          <nav
+            className="scrollbar-none flex min-w-0 gap-1.5 overflow-x-auto"
+            aria-label="게시판 분류"
+          >
             {TABS.map((tab) => {
               const active = (category ?? "") === tab.value;
               return (
@@ -69,7 +77,7 @@ export default async function BoardPage({ searchParams }: PageProps<"/board">) {
                   key={tab.value || "all"}
                   href={buildHref({ category: tab.value, page: 1 })}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded-btn px-4 py-2.5 text-[14px] font-bold transition-colors ${
+                  className={`shrink-0 rounded-btn px-4 py-2.5 text-[14px] font-bold whitespace-nowrap transition-colors ${
                     active
                       ? "bg-brand-900 text-white"
                       : "bg-surface text-ink-500 hover:bg-brand-50 hover:text-brand-700"
