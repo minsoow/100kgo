@@ -53,6 +53,7 @@ docs/자료요청건회신/
 # 시안 검토용 중간 산출물 (용량이 크고 최종 결과물이 아님)
 docs/히어로_*.png
 docs/hero.jpg
+docs/mr_kwon.jpg
 
 # Claude Code 로컬 설정 (사용자·머신마다 다름)
 .claude/settings.local.json
