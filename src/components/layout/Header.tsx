@@ -112,14 +112,14 @@ export function Header({ variant = "overlay" }: HeaderProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[14px] transition-colors duration-300 hover:opacity-60 ${textColor}`}
+              className={`text-[16px] transition-colors duration-300 hover:opacity-60 ${textColor}`}
             >
               {item.label}
             </Link>
           ))}
           <Link
             href="/board"
-            className={`rounded-btn border px-5 py-2.5 text-[14px] whitespace-nowrap transition-colors duration-300 ${
+            className={`rounded-btn border px-5 py-2.5 text-[16px] whitespace-nowrap transition-colors duration-300 ${
               onDark
                 ? "border-white/40 text-white hover:bg-white hover:text-ink-900"
                 : "border-ink-900/25 text-ink-900 hover:bg-ink-900 hover:text-white"
