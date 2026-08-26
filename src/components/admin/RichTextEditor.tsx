@@ -3,7 +3,13 @@
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
-import { useCallback, useEffect, useState } from "react";
+import Image from "@tiptap/extension-image";
+import { upload } from "@vercel/blob/client";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+/** 본문 삽입용 이미지 제한. 첨부파일(20MB)보다 작게 잡습니다. */
+const IMAGE_ACCEPT = "image/jpeg,image/png,image/webp,image/gif";
+const IMAGE_MAX_BYTES = 8 * 1024 * 1024;
 
 type ToolbarButtonProps = {
   label: string;
@@ -56,6 +62,51 @@ function Toolbar({ editor }: { editor: Editor }) {
     }
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   }, [editor]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  /**
+   * 이미지를 Blob 에 올리고 커서 위치에 삽입합니다.
+   * 첨부파일과 같은 경로(/api/upload)를 씁니다. 세션 검증과 형식·용량 제한이
+   * 서버에서 한 번 더 걸리므로 여기 검사는 사용자에게 빨리 알려주는 용도입니다.
+   */
+  const insertImage = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      event.target.value = "";
+      if (!file) return;
+
+      setError(null);
+      if (file.size > IMAGE_MAX_BYTES) {
+        setError("이미지는 8MB 이하만 넣을 수 있습니다.");
+        return;
+      }
+
+      setUploading(true);
+      try {
+        const blob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+        });
+        editor
+          .chain()
+          .focus()
+          .setImage({ src: blob.url, alt: file.name })
+          .run();
+      } catch (uploadError) {
+        setError(
+          uploadError instanceof Error
+            ? `업로드 실패: ${uploadError.message}`
+            : "이미지 업로드에 실패했습니다.",
+        );
+      } finally {
+        setUploading(false);
+      }
+    },
+    [editor],
+  );
 
   return (
     <div className="flex flex-wrap items-center gap-0.5 rounded-t-btn border border-line bg-surface p-1.5">
@@ -158,6 +209,27 @@ function Toolbar({ editor }: { editor: Editor }) {
         title="가로 구분선"
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
       />
+
+      <span aria-hidden className="mx-1 h-5 w-px bg-line" />
+
+      <ToolbarButton
+        label={uploading ? "올리는 중…" : "🖼 이미지"}
+        title="본문에 이미지 넣기"
+        onClick={() => inputRef.current?.click()}
+      />
+      <input
+        ref={inputRef}
+        type="file"
+        accept={IMAGE_ACCEPT}
+        onChange={insertImage}
+        className="hidden"
+      />
+
+      {error && (
+        <p role="alert" className="ml-2 text-[13px] font-medium text-red-600">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -184,6 +256,8 @@ export function RichTextEditor({ name, defaultValue = "" }: RichTextEditorProps)
         },
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      // 본문 삽입 이미지. sanitize 는 img 의 src·alt·width·height 만 통과시킵니다.
+      Image.configure({ inline: false, allowBase64: false }),
     ],
     content: defaultValue,
     editorProps: {

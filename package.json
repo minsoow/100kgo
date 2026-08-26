@@ -15,6 +15,7 @@
     "admin:create": "tsx scripts/create-admin.ts"
   },
   "dependencies": {
+    "@tiptap/extension-image": "3.29.2",
     "@tiptap/extension-text-align": "^3.29.2",
     "@tiptap/pm": "^3.29.2",
     "@tiptap/react": "^3.29.2",

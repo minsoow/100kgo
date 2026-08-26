@@ -15,7 +15,7 @@ import { checkLoginRateLimit, resetLoginRateLimit } from "@/lib/rate-limit";
 import { getDb, isDatabaseConfigured } from "@/lib/db";
 import { attachments, posts } from "@/lib/db/schema";
 import { sanitizePostContent } from "@/lib/sanitize";
-import { parseAttachmentsField } from "@/lib/attachments";
+import { extractBlobImageUrls, parseAttachmentsField } from "@/lib/attachments";
 import { deleteBlobs } from "@/lib/blob";
 import type { ActionState } from "@/lib/action-state";
 
@@ -130,10 +130,26 @@ export async function savePostAction(
   let savedId: number;
 
   if (postId && Number.isInteger(postId)) {
+    // 본문에서 빠진 이미지도 스토리지에서 지웁니다. 본문 이미지는 attachments
+    // 테이블에 없으므로 수정 전후 HTML 을 비교하는 것 말고는 알 방법이 없습니다.
+    const [before] = await db
+      .select({ content: posts.content })
+      .from(posts)
+      .where(eq(posts.id, postId))
+      .limit(1);
+
     await db
       .update(posts)
       .set({ ...values, updatedAt: new Date() })
       .where(eq(posts.id, postId));
+
+    if (before) {
+      const stillUsed = new Set(extractBlobImageUrls(values.content));
+      const droppedImages = extractBlobImageUrls(before.content).filter(
+        (url) => !stillUsed.has(url),
+      );
+      await deleteBlobs(droppedImages);
+    }
 
     // 첨부파일은 폼 상태를 정본으로 삼아 전체 교체하고,
     // 목록에서 빠진 파일은 스토리지에서도 제거해 고아 파일을 남기지 않습니다.
@@ -190,10 +206,18 @@ export async function deletePostAction(formData: FormData): Promise<void> {
     .from(attachments)
     .where(eq(attachments.postId, postId));
 
+  // 본문에 삽입된 이미지는 attachments 에 없으므로 HTML 에서 직접 찾아냅니다.
+  const [post] = await db
+    .select({ content: posts.content })
+    .from(posts)
+    .where(eq(posts.id, postId))
+    .limit(1);
+  const inlineImages = post ? extractBlobImageUrls(post.content) : [];
+
   // attachments 행은 FK ON DELETE CASCADE 로 함께 삭제되지만,
   // 스토리지 파일은 명시적으로 지워야 합니다.
   await db.delete(posts).where(eq(posts.id, postId));
-  await deleteBlobs(files.map((file) => file.fileUrl));
+  await deleteBlobs([...files.map((file) => file.fileUrl), ...inlineImages]);
 
   revalidatePath("/");
   revalidatePath("/board");
