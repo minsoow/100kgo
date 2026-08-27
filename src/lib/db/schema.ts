@@ -85,7 +85,45 @@ export const adminUsers = pgTable("admin_users", {
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
 });
 
+/**
+ * 첫 화면 팝업 (별도 계약 · 유상 추가개발).
+ *
+ * 노출 조건은 세 가지가 모두 참일 때입니다.
+ *   1) isActive
+ *   2) startsAt 이 없거나 이미 지났음
+ *   3) endsAt 이 없거나 아직 안 지났음
+ *
+ * 기간을 비워 두면 무기한 노출입니다. 협회가 행사 끝나고 내리는 걸 잊어도
+ * 기간만 넣어두면 자동으로 사라지므로 기간 입력을 권장합니다.
+ *
+ * updatedAt 은 "다시 보지 않기" 판정에도 씁니다. 방문자가 닫은 뒤 협회가
+ * 팝업을 수정하면 다시 보여야 하므로, 브라우저에는 id 가 아니라
+ * id + updatedAt 을 저장합니다.
+ */
+export const popups = pgTable("popups", {
+  id: serial("id").primaryKey(),
+  /** 관리 화면에서 구분하기 위한 이름. 방문자에게는 보이지 않습니다. */
+  title: varchar("title", { length: 200 }).notNull(),
+  /** Vercel Blob 공개 URL (정사각형 권장) */
+  imageUrl: text("image_url").notNull(),
+  /** 스크린리더용 설명. 비우면 title 을 씁니다. */
+  imageAlt: varchar("image_alt", { length: 300 }),
+  /** 이미지를 클릭했을 때 이동할 주소. 비우면 클릭해도 이동하지 않습니다. */
+  linkUrl: text("link_url"),
+  isActive: boolean("is_active").notNull().default(false),
+  startsAt: timestamp("starts_at", { withTimezone: true }),
+  endsAt: timestamp("ends_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
 export type Attachment = typeof attachments.$inferSelect;
 export type AdminUser = typeof adminUsers.$inferSelect;
+export type Popup = typeof popups.$inferSelect;
+export type NewPopup = typeof popups.$inferInsert;

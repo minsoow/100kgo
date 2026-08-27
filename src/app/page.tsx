@@ -10,6 +10,8 @@ import { Vision } from "@/components/sections/Vision";
 import { Programs } from "@/components/sections/Programs";
 import { Channels } from "@/components/sections/Channels";
 import { NewsPreview } from "@/components/sections/NewsPreview";
+import { SitePopup } from "@/components/sections/SitePopup";
+import { getActivePopup } from "@/lib/db/queries";
 
 function NewsSkeleton() {
   return (
@@ -19,7 +21,9 @@ function NewsSkeleton() {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const popup = await getActivePopup();
+
   return (
     <>
       {/*
@@ -28,6 +32,25 @@ export default function HomePage() {
         협회는 보내준 로고가 원래 색으로 선명하게 보이길 원했습니다.
         overlay 방식이 필요해지면 variant 만 되돌리면 됩니다.
       */}
+      {/*
+        안내 팝업. 띄울 팝업이 없으면 아무것도 내려가지 않습니다.
+
+        Suspense 로 감싸지 않는 이유: 스트리밍 자리표시자(<div hidden>) 안에
+        경계가 남아, 클라이언트에서 팝업을 열어도 화면에 나타나지 않았습니다.
+        조회가 가벼운 쿼리 한 번이라 서버에서 바로 받아 넘깁니다.
+      */}
+      {popup && (
+        <SitePopup
+          popup={{
+            id: popup.id,
+            imageUrl: popup.imageUrl,
+            imageAlt: popup.imageAlt ?? popup.title,
+            linkUrl: popup.linkUrl,
+            version: `${popup.id}:${popup.updatedAt.getTime()}`,
+          }}
+        />
+      )}
+
       <Header variant="plain" />
       <main className="pt-20">
         <Hero />

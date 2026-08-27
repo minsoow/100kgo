@@ -1,10 +1,24 @@
 import "server-only";
-import { and, count, desc, eq, ilike, or, sql, type SQL } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  isNull,
+  lte,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm";
 import { getDb, isDatabaseConfigured } from "./index";
 import {
   attachments,
+  popups,
   posts,
   type Attachment,
+  type Popup,
   type Post,
   type PostCategory,
 } from "./schema";
@@ -151,4 +165,50 @@ export async function getAdjacentPosts(post: Post) {
     .limit(1);
 
   return { prev: prev ?? null, next: next ?? null };
+}
+
+/* ── 팝업 ────────────────────────────────────────────────────────── */
+
+/**
+ * 첫 화면에 띄울 팝업 1건.
+ *
+ * 조건을 만족하는 게 여럿이면 가장 최근에 수정한 것을 씁니다.
+ * 팝업을 여러 개 동시에 띄우면 화면을 가리므로 한 번에 하나만 내보냅니다.
+ *
+ * 기간 비교는 DB 시각(now())으로 합니다. 서버와 DB 시계가 어긋나도
+ * 같은 기준으로 판정되게 하려는 것입니다.
+ */
+export async function getActivePopup(): Promise<Popup | null> {
+  if (!isDatabaseConfigured()) return null;
+
+  const [row] = await getDb()
+    .select()
+    .from(popups)
+    .where(
+      and(
+        eq(popups.isActive, true),
+        or(isNull(popups.startsAt), lte(popups.startsAt, sql`now()`)),
+        or(isNull(popups.endsAt), gte(popups.endsAt, sql`now()`)),
+      ),
+    )
+    .orderBy(desc(popups.updatedAt))
+    .limit(1);
+
+  return row ?? null;
+}
+
+/** 관리 화면 목록. 노출 여부와 무관하게 전부 보여줍니다. */
+export async function listPopups(): Promise<Popup[]> {
+  if (!isDatabaseConfigured()) return [];
+  return getDb().select().from(popups).orderBy(desc(popups.updatedAt));
+}
+
+export async function getPopup(id: number): Promise<Popup | null> {
+  if (!isDatabaseConfigured()) return null;
+  const [row] = await getDb()
+    .select()
+    .from(popups)
+    .where(eq(popups.id, id))
+    .limit(1);
+  return row ?? null;
 }

@@ -29,9 +29,24 @@ export default async function ProtectedAdminLayout({
                 KO
               </span>
               <span className="text-[15px] font-bold text-brand-900">
-                게시판 관리
+                협회 홈페이지 관리
               </span>
             </Link>
+
+            <nav className="ml-3 flex items-center gap-1">
+              <Link
+                href="/admin/posts"
+                className="rounded-btn px-3 py-2 text-[14px] font-bold text-ink-500 transition-colors hover:bg-surface hover:text-brand-700"
+              >
+                게시판
+              </Link>
+              <Link
+                href="/admin/popups"
+                className="rounded-btn px-3 py-2 text-[14px] font-bold text-ink-500 transition-colors hover:bg-surface hover:text-brand-700"
+              >
+                팝업
+              </Link>
+            </nav>
           </div>
 
           <div className="flex items-center gap-2">

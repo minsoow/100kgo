@@ -13,7 +13,7 @@ import {
 } from "@/lib/auth";
 import { checkLoginRateLimit, resetLoginRateLimit } from "@/lib/rate-limit";
 import { getDb, isDatabaseConfigured } from "@/lib/db";
-import { attachments, posts } from "@/lib/db/schema";
+import { attachments, popups, posts } from "@/lib/db/schema";
 import { sanitizePostContent } from "@/lib/sanitize";
 import { extractBlobImageUrls, parseAttachmentsField } from "@/lib/attachments";
 import { deleteBlobs } from "@/lib/blob";
@@ -222,4 +222,155 @@ export async function deletePostAction(formData: FormData): Promise<void> {
   revalidatePath("/");
   revalidatePath("/board");
   revalidatePath("/admin/posts");
+}
+
+/* ---------------------------------- 팝업 ---------------------------------- */
+
+/**
+ * 날짜 입력(datetime-local)은 값이 없을 수 있고, 있으면 "2026-08-31T09:00"
+ * 형태의 로컬 시각 문자열입니다. 빈 문자열은 "지정 안 함"으로 봅니다.
+ */
+function parseDateField(raw: FormDataEntryValue | null): Date | null {
+  const value = typeof raw === "string" ? raw.trim() : "";
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+const popupSchema = z
+  .object({
+    title: z
+      .string()
+      .min(1, "팝업 이름을 입력해 주세요.")
+      .max(200, "팝업 이름이 너무 깁니다."),
+    imageUrl: z.string().url("팝업 이미지를 등록해 주세요."),
+    imageAlt: z.string().max(300).optional(),
+    linkUrl: z
+      .string()
+      .max(2048)
+      .refine(
+        (v) => v === "" || /^https?:\/\//i.test(v),
+        "연결 주소는 http:// 또는 https:// 로 시작해야 합니다.",
+      )
+      .optional(),
+    isActive: z.boolean(),
+  })
+  .strict();
+
+export async function savePopupAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/admin/login");
+  }
+
+  if (!isDatabaseConfigured()) {
+    return { error: "데이터베이스가 연결되지 않았습니다." };
+  }
+
+  const parsed = popupSchema.safeParse({
+    title: formData.get("title"),
+    imageUrl: formData.get("imageUrl") ?? "",
+    imageAlt: (formData.get("imageAlt") as string | null) ?? "",
+    linkUrl: (formData.get("linkUrl") as string | null) ?? "",
+    isActive: formData.get("isActive") === "on",
+  });
+
+  if (!parsed.success) {
+    return {
+      error: parsed.error.issues[0]?.message ?? "입력값을 확인해 주세요.",
+    };
+  }
+
+  const startsAt = parseDateField(formData.get("startsAt"));
+  const endsAt = parseDateField(formData.get("endsAt"));
+  if (startsAt && endsAt && endsAt <= startsAt) {
+    return { error: "종료 일시가 시작 일시보다 빠릅니다." };
+  }
+
+  const values = {
+    title: parsed.data.title,
+    imageUrl: parsed.data.imageUrl,
+    imageAlt: parsed.data.imageAlt?.trim() || null,
+    linkUrl: parsed.data.linkUrl?.trim() || null,
+    isActive: parsed.data.isActive,
+    startsAt,
+    endsAt,
+  };
+
+  const db = getDb();
+  const rawId = formData.get("id");
+  const popupId = rawId ? Number(rawId) : null;
+
+  if (popupId && Number.isInteger(popupId)) {
+    // 이미지를 갈아끼웠으면 예전 이미지는 스토리지에서 지웁니다.
+    const [before] = await db
+      .select({ imageUrl: popups.imageUrl })
+      .from(popups)
+      .where(eq(popups.id, popupId))
+      .limit(1);
+
+    await db
+      .update(popups)
+      .set({ ...values, updatedAt: new Date() })
+      .where(eq(popups.id, popupId));
+
+    if (before && before.imageUrl !== values.imageUrl) {
+      await deleteBlobs([before.imageUrl]);
+    }
+  } else {
+    await db.insert(popups).values(values);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/popups");
+  redirect("/admin/popups");
+}
+
+export async function deletePopupAction(formData: FormData): Promise<void> {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/admin/login");
+  }
+
+  const popupId = Number(formData.get("id"));
+  if (!Number.isInteger(popupId) || popupId <= 0) return;
+
+  const db = getDb();
+  const [popup] = await db
+    .select({ imageUrl: popups.imageUrl })
+    .from(popups)
+    .where(eq(popups.id, popupId))
+    .limit(1);
+
+  await db.delete(popups).where(eq(popups.id, popupId));
+  if (popup) await deleteBlobs([popup.imageUrl]);
+
+  revalidatePath("/");
+  revalidatePath("/admin/popups");
+}
+
+/** 목록에서 바로 켜고 끄기 */
+export async function togglePopupAction(formData: FormData): Promise<void> {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect("/admin/login");
+  }
+
+  const popupId = Number(formData.get("id"));
+  if (!Number.isInteger(popupId) || popupId <= 0) return;
+
+  const next = formData.get("next") === "on";
+  await getDb()
+    .update(popups)
+    .set({ isActive: next, updatedAt: new Date() })
+    .where(eq(popups.id, popupId));
+
+  revalidatePath("/");
+  revalidatePath("/admin/popups");
 }
