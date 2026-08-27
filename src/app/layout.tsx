@@ -9,7 +9,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${association.nameShort} | 대한민국의 다음 수출은 해외직판입니다`,
+    default: `${association.nameShort} | 대한민국 10만 해외직판상 시대를 엽니다`,
     template: `%s | ${association.nameShort}`,
   },
   description:
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ko_KR",
     siteName: association.nameShort,
-    title: `${association.nameShort} | 대한민국의 다음 수출은 해외직판입니다`,
+    title: `${association.nameShort} | 대한민국 10만 해외직판상 시대를 엽니다`,
     description:
       "국내의 우수한 상품이 세계 소비자와 직접 연결되도록, 교육에서 끝나지 않고 실제 판매까지 함께 만드는 실행형 협회입니다.",
   },

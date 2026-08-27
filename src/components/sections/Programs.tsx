@@ -2,19 +2,19 @@ import { programs } from "@/content/association";
 import { Section, SectionHeading } from "@/components/ui/Section";
 
 /**
- * 6대 사업 — 균일 카드 그리드.
+ * 협회 주요 사업 — 균일 카드 그리드.
  *
  * 이전에는 셀 너비를 행마다 다르게 주고 일부 셀에만 사진을 깔았는데,
  * 변주가 과해 화면이 어수선했습니다. 레퍼런스(NHN Cloud · 신한퓨처스랩)는
- * 모두 같은 크기·같은 처리의 카드를 반복합니다. 여기서도 6장을 동일하게
+ * 모두 같은 크기·같은 처리의 카드를 반복합니다. 여기서도 카드를 동일하게
  * 맞추고 번호와 제목·설명만으로 구성했습니다. 그림자는 쓰지 않습니다.
  */
 export function Programs() {
   return (
     <Section id="programs" tone="page">
       <SectionHeading
-        title="6대 사업"
-        description="국내의 우수한 상품과 세계 소비자를 직접 연결하는 여섯 가지 사업입니다."
+        title="협회 주요 사업"
+        description="국내의 우수한 상품과 세계 소비자를 직접 연결하는 다섯 가지 사업입니다."
       />
 
       {/*

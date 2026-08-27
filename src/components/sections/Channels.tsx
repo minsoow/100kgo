@@ -28,7 +28,10 @@ export function Channels() {
           />
 
           <h2 className="display-lg text-white">{channel.label}</h2>
-          <p className="mt-5 max-w-md text-[15px] leading-[1.85] text-white/75 md:text-[16px]">
+          <p className="mt-4 max-w-md text-[16px] leading-[1.7] font-medium text-white md:text-[17px]">
+            {channel.tagline}
+          </p>
+          <p className="mt-4 max-w-md text-[15px] leading-[1.85] text-white/70 md:text-[16px]">
             {channel.description}
           </p>
           <a

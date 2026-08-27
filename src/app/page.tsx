@@ -22,9 +22,14 @@ function NewsSkeleton() {
 export default function HomePage() {
   return (
     <>
-      {/* 히어로 위에 얹히는 투명 내비 */}
-      <Header variant="overlay" />
-      <main>
+      {/*
+        협회 요청(「홈피 요청」 7번)으로 투명 내비를 걷어냈습니다.
+        히어로 사진 위에 얹으면 로고를 흰색으로 반전할 수밖에 없는데,
+        협회는 보내준 로고가 원래 색으로 선명하게 보이길 원했습니다.
+        overlay 방식이 필요해지면 variant 만 되돌리면 됩니다.
+      */}
+      <Header variant="plain" />
+      <main className="pt-20">
         <Hero />
         {/*
           협회소개 · 인사말 · 조직도는 텍스트 위주라 세로로 나열하면

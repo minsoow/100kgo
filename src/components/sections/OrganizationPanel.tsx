@@ -79,12 +79,33 @@ export function OrganizationPanel() {
           <Node name={organization.chair} tone="primary" />
         </div>
 
-        <Connector />
-        <div className="mx-auto max-w-sm">
-          <Node name={organization.office} tone="muted" />
+        {/*
+          사무국은 하부 조직의 상급 부서가 아니라 이사장을 지원하는 조직입니다.
+          이사장에서 하부 부서로 내려가는 선의 옆으로 갈라져 나오게 그립니다
+          (「홈피 요청」 2번). 좁은 화면에서는 옆으로 뺄 자리가 없어
+          세로로 이어 붙입니다.
+        */}
+        <div className="relative mx-auto flex flex-col items-center">
+          <div aria-hidden className="h-8 w-px bg-line md:h-24" />
+
+          {/* 데스크톱에서 선 중간에서 오른쪽으로 뻗는 가지 */}
+          <div
+            aria-hidden
+            className="absolute top-1/2 left-1/2 hidden h-px w-24 bg-line md:block lg:w-32"
+          />
+
+          {/*
+            사무국 노드는 하나만 둡니다. 데스크톱에서는 가지 끝으로 띄우고
+            모바일에서는 그냥 선 아래에 놓습니다. 화면별로 두 벌을 두면
+            스크린리더가 "사무국" 을 두 번 읽습니다.
+          */}
+          <div className="w-full max-w-sm md:absolute md:top-1/2 md:left-[calc(50%+6rem)] md:w-56 md:max-w-none md:-translate-y-1/2 lg:left-[calc(50%+8rem)]">
+            <Node name={organization.office} tone="muted" />
+          </div>
+
+          <div aria-hidden className="h-8 w-px bg-line md:hidden" />
         </div>
 
-        <Connector />
         <div aria-hidden className="mx-auto h-px w-full max-w-5xl bg-line" />
 
         <ul className="mx-auto mt-8 grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
