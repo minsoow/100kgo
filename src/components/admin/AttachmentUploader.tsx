@@ -7,7 +7,7 @@ import { formatFileSize } from "@/lib/format";
 
 const MAX_FILES = 10;
 const MAX_BYTES = 20 * 1024 * 1024;
-const ACCEPT = ".pdf,.jpg,.jpeg,.png,.webp,.gif,.hwp,.hwpx";
+const ACCEPT = ".pdf,.jpg,.jpeg,.png,.webp,.gif,.hwp,.hwpx,.doc,.docx";
 
 type AttachmentUploaderProps = {
   name: string;
@@ -88,7 +88,7 @@ export function AttachmentUploader({
           {uploading ? "업로드 중…" : "파일 선택"}
         </button>
         <p className="text-[13px] text-ink-400">
-          PDF · 이미지 · HWP / 파일당 최대 20MB / 최대 {MAX_FILES}개
+          PDF · 워드 · 한글 · 이미지 / 파일당 최대 20MB / 최대 {MAX_FILES}개
         </p>
       </div>
 

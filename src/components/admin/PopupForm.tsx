@@ -106,15 +106,19 @@ export function PopupForm({ initial = EMPTY }: { initial?: PopupFormValues }) {
         <input
           id="linkUrl"
           name="linkUrl"
-          type="url"
+          type="text"
           maxLength={2048}
           defaultValue={initial.linkUrl}
-          placeholder="https://"
+          placeholder="/board/10  또는  https://cafe.naver.com/..."
           className={fieldClass}
         />
-        <p className="mt-2 text-[13px] text-ink-400">
+        <p className="mt-2 text-[13px] leading-[1.8] text-ink-400">
           방문자가 팝업 이미지를 클릭하면 이 주소로 이동합니다(새 창). 비워 두면
           클릭해도 아무 일이 일어나지 않습니다.
+          <br />
+          <b>협회 홈페이지 안의 게시글로 연결할 때</b>는 주소 전체가 아니라{" "}
+          <b>/board/10</b> 처럼 <b>/</b> 부터 적어 주세요. 나중에 홈페이지 주소가
+          바뀌어도 링크가 깨지지 않습니다.
         </p>
       </div>
 

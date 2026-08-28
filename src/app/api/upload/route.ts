@@ -20,6 +20,10 @@ export const ALLOWED_CONTENT_TYPES = [
   "application/x-hwp",
   "application/vnd.hancom.hwp",
   "application/vnd.hancom.hwpx",
+  // 워드(DOC/DOCX) — 지원서처럼 받는 사람이 채워 넣어야 하는 양식은
+  // PDF 로 바꾸면 작성이 안 되므로 원본 형식 그대로 올릴 수 있어야 합니다.
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
 export const MAX_UPLOAD_BYTES = 20 * 1024 * 1024; // 20MB
