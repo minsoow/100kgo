@@ -170,11 +170,11 @@
 @utility container-page {
   width: 100%;
   /*
-    1800px 이었는데 1400px 로 줄였습니다. 게시판(container-board, 768px)과
-    폭 차이가 너무 커서 랜딩에서 게시판으로 넘어갈 때 화면이 확 좁아지는
-    느낌이 들었습니다.
+    1400px 로 줄였다가 되돌렸습니다. 게시판(container-board, 768px)과 폭 차이가
+    커서 페이지를 오갈 때 이질감이 있지만, 랜딩은 사진과 큰 헤드라인을 시원하게
+    놓는 화면이라 넓은 쪽이 맞다고 판단했습니다. 이질감은 감수합니다.
   */
-  max-width: 87.5rem; /* 1400px */
+  max-width: 112.5rem; /* 1800px */
   margin-inline: auto;
   padding-inline: 1.5rem;
 
