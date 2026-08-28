@@ -38,7 +38,8 @@ export default function PrivacyPage() {
   return (
     <>
       <Header variant="plain" />
-      <main className="flex-1 pt-24">
+      {/* pt-20 = 고정 헤더(h-20) 높이. 자세한 사정은 board/layout.tsx 주석 참고 */}
+      <main className="flex-1 pt-20">
         <div className="border-b border-line bg-surface">
           <div className="container-page py-16 md:py-24">
             <h1 className="display-lg text-brand-900">{privacy.title}</h1>

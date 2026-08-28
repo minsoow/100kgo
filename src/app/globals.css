@@ -86,8 +86,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* 고정 헤더 높이(h-24 = 6rem)와 맞춥니다. Header.tsx 의 HEADER_HEIGHT 참고. */
-    scroll-padding-top: 6rem;
+    /*
+      앵커로 이동할 때 제목이 고정 헤더에 가리지 않도록 띄우는 값.
+      모든 페이지가 흰 바(h-20 = 5rem)를 쓰므로 그 높이에 맞춥니다.
+    */
+    scroll-padding-top: 5rem;
   }
 
   body {

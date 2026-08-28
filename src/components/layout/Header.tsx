@@ -6,11 +6,14 @@ import { useEffect, useState } from "react";
 import { association, navItems, BOARD_LABEL } from "@/content/association";
 
 /**
- * 투명 상태에서의 내비 높이(px). 전환 임계값 계산에 씁니다.
+ * 투명(overlay) 상태의 내비 높이(px). 투명 → 솔리드 전환 임계값에만 씁니다.
  *
- * 이 값을 바꾸면 함께 맞춰야 하는 곳:
- *   globals.css 의 scroll-padding-top, board/privacy 레이아웃의 pt-*,
- *   Channels.tsx 의 scroll-mt-*. 전부 고정 헤더에 콘텐츠가 가리지 않게 하는 값입니다.
+ * ⚠️ 지금은 모든 페이지가 variant="plain" 이라 이 값이 쓰이지 않습니다.
+ *    콘텐츠를 헤더 아래로 밀어내는 값은 솔리드 높이인 h-20(80px) 기준이며,
+ *    아래 세 곳이 그 값에 묶여 있습니다. 헤더 높이를 바꾸면 함께 고쳐야 합니다.
+ *      - globals.css 의 scroll-padding-top (5rem)
+ *      - board/layout.tsx · privacy/page.tsx · page.tsx 의 main pt-20
+ *      - Channels.tsx 의 scroll-mt-20
  */
 const HEADER_HEIGHT = 96;
 

@@ -12,7 +12,7 @@ export function Channels() {
         <article
           key={channel.id}
           id={channel.id}
-          className="reveal group relative isolate flex min-h-[32rem] scroll-mt-24 flex-col justify-end overflow-hidden bg-brand-950 p-10 md:min-h-[38rem] md:p-14"
+          className="reveal group relative isolate flex min-h-[32rem] scroll-mt-20 flex-col justify-end overflow-hidden bg-brand-950 p-10 md:min-h-[38rem] md:p-14"
         >
           <Image
             src={`/images/channel-${channel.id}.jpg`}
