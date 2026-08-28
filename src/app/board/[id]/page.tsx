@@ -41,7 +41,7 @@ export default async function PostDetailPage({
   const { prev, next } = await getAdjacentPosts(post);
 
   return (
-    <article className="container-page py-12 md:py-16">
+    <article className="container-board py-12 md:py-16">
       <Link
         href="/board"
         className="inline-flex items-center gap-1.5 text-[14px] font-bold text-ink-500 transition-colors hover:text-brand-700"

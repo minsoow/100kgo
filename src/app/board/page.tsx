@@ -50,7 +50,7 @@ export default async function BoardPage({ searchParams }: PageProps<"/board">) {
   return (
     <>
       <div className="border-b border-line bg-surface">
-        <div className="container-page py-16 md:py-24">
+        <div className="container-board py-16 md:py-24">
           <h1 className="display-lg text-brand-900">{BOARD_LABEL}</h1>
           <p className="mt-5 max-w-2xl text-[16px] leading-[1.85] text-ink-500">
             해외직판 지원사업 정보와 협회 공지사항, 법령에 따른 재무고시 자료를
@@ -59,7 +59,7 @@ export default async function BoardPage({ searchParams }: PageProps<"/board">) {
         </div>
       </div>
 
-      <div className="container-page py-12 md:py-16">
+      <div className="container-board py-12 md:py-16">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           {/*
             홈의 분류 탭과 같은 방식으로 좁은 화면에서 옆으로 넘겨 봅니다.
