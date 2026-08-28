@@ -7,6 +7,7 @@ import { privacy } from "@/content/privacy";
 import { isPending, resolveContent } from "@/lib/content-utils";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy" },
   title: privacy.title,
   description:
     "사단법인 한국온라인해외직판협회의 개인정보처리방침입니다.",

@@ -8,6 +8,8 @@ import { formatDate } from "@/lib/format";
 import { Pagination } from "@/components/board/Pagination";
 
 export const metadata: Metadata = {
+  // 레이아웃의 canonical("/")을 자기 경로로 덮어씁니다
+  alternates: { canonical: "/board" },
   title: BOARD_LABEL,
   description:
     "한국온라인해외직판협회의 지원사업 정보, 공지사항, 재무고시 자료를 확인하실 수 있습니다.",

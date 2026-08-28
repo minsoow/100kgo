@@ -22,6 +22,8 @@ export async function generateMetadata({
   if (!post) return { title: "게시글을 찾을 수 없습니다" };
 
   return {
+    // 레이아웃의 canonical("/")을 이 글의 주소로 덮어씁니다
+    alternates: { canonical: `/board/${post.id}` },
     title: post.title,
     description: toPlainTextExcerpt(post.content, 150),
   };
