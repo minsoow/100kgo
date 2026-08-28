@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { BOARD_LABEL } from "@/content/association";
@@ -49,15 +50,40 @@ export default async function BoardPage({ searchParams }: PageProps<"/board">) {
 
   return (
     <>
-      <div className="border-b border-line bg-surface">
+      {/*
+        제목 영역. 회색 배경만 두니 허전해서 사진을 깔았습니다.
+
+        사진은 화면 끝까지 채우고 글자는 본문과 같은 폭(container-board)에
+        맞춥니다. 목록으로 스크롤할 때 제목과 글 제목의 시작점이 어긋나면
+        눈에 걸립니다.
+
+        스크림(어두운 겹판)은 왼쪽이 더 짙은 가로 그라디언트입니다. 글자가
+        왼쪽에 몰려 있어 그쪽만 확실히 눌러 주면 사진의 밝은 부분을 덜
+        죽이면서 대비를 확보할 수 있습니다.
+      */}
+      <section className="relative isolate overflow-hidden bg-brand-950">
+        <Image
+          src="/images/board-header.jpg"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="-z-20 object-cover"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-brand-950/92 via-brand-950/80 to-brand-950/55"
+        />
+
         <div className="container-board py-16 md:py-24">
-          <h1 className="display-lg text-brand-900">{BOARD_LABEL}</h1>
-          <p className="mt-5 max-w-2xl text-[16px] leading-[1.85] text-ink-500">
+          <h1 className="display-lg text-white">{BOARD_LABEL}</h1>
+          <p className="mt-5 max-w-2xl text-[16px] leading-[1.85] text-white/75">
             해외직판 지원사업 정보와 협회 공지사항, 법령에 따른 재무고시 자료를
             한곳에서 확인하실 수 있습니다.
           </p>
         </div>
-      </div>
+      </section>
 
       <div className="container-board py-12 md:py-16">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
