@@ -8,12 +8,8 @@ const contactRows = [
   { label: "주소", value: association.contact.address },
   { label: "대표전화", value: association.contact.tel },
   { label: "이메일", value: association.contact.email },
-  {
-    label: "사업자등록번호",
-    value: association.contact.businessNumber,
-    // 발급 진행 중이라 번호 대신 상태를 표기합니다
-    fallback: "발급 진행 중",
-  },
+  // 사업자등록번호가 아니라 비영리법인 고유번호입니다 (association.ts 주석 참고)
+  { label: "고유번호", value: association.contact.registrationNumber },
 ];
 
 export function Footer() {
@@ -40,9 +36,12 @@ export function Footer() {
             {contactRows.map((row) => (
               <div key={row.label} className="flex gap-5">
                 <dt className="w-28 shrink-0 text-white/40">{row.label}</dt>
-                <dd className="text-white/80">
-                  {resolveContent(row.value, row.fallback)}
-                </dd>
+                {/*
+                  이제 미확정 값이 없어 fallback 인자를 뺐습니다.
+                  resolveContent 는 TODO_ 값이 실수로 들어갔을 때
+                  화면에 그대로 노출되는 것을 막는 안전장치로 남깁니다.
+                */}
+                <dd className="text-white/80">{resolveContent(row.value)}</dd>
               </div>
             ))}
           </dl>
