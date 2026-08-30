@@ -43,7 +43,7 @@ def S(name, **kw):
 st_title   = S("t",  fontName="KR-Bd", fontSize=21, leading=29, textColor=NAVY)
 st_sub     = S("s",  fontSize=10.5, leading=17, textColor=MUTED)
 st_h1      = S("h1", fontName="KR-Bd", fontSize=13, leading=19, textColor=NAVY,
-               spaceBefore=15, spaceAfter=7)
+               spaceBefore=13, spaceAfter=6)
 st_body    = S("b",  spaceAfter=4)
 st_note    = S("n",  fontSize=8.8, leading=14.5, textColor=MUTED)
 st_cell    = S("c",  fontSize=9, leading=14)
@@ -198,11 +198,19 @@ a(P("• 도메인은 <b>매년 갱신</b>이 필요합니다. 갱신하지 않�
 a(P("7. 하자보수 안내", st_h1))
 a(table([
     [CB("기간"), C("납품일로부터 1개월")],
-    [CB("범위"), C("정상적으로 사용했음에도 발생하는 시스템 오류의 수정")],
-    [CB("범위 외"), C("콘텐츠 입력 실수, 신규 기능 추가, 디자인 변경, 협회 자료의 추가 반영")],
+    [CB("무상 범위"),
+     C("• 정상적으로 사용했음에도 발생하는 시스템 오류의 수정<br/>"
+       "• 홈페이지 본문의 <b>기존 문구·사진 교체</b> (협회가 직접 고칠 수 없는 영역)")],
+    [CB("범위 외"),
+     C("• 새 섹션·페이지 추가<br/>"
+       "• 디자인 변경, 화면 배치 변경<br/>"
+       "• 새로운 기능 추가<br/>"
+       "• 게시판 글·팝업의 대신 작성 (협회가 직접 등록하실 수 있는 영역)")],
 ], [24 * mm, 141 * mm]))
 a(Spacer(1, 2 * mm))
-a(P("범위 외 요청은 사안에 따라 별도 견적으로 안내드립니다.", st_note))
+a(P("• 문구·사진 교체는 <b>내용을 정리해 한 번에 보내 주시면</b> 빠르게 반영됩니다.", st_note))
+a(P("• 범위 외 요청은 사안에 따라 별도 견적으로 안내드립니다.", st_note))
+a(P("• 하자보수 기간이 끝난 뒤의 수정은 모두 별도 협의 대상입니다.", st_note))
 
 # ── 8. 협회 관리 사항 ──────────────────────────────────────────────
 a(P("8. 협회에서 관리하실 사항", st_h1))
@@ -224,11 +232,11 @@ a(table([
     [C("본 산출물 안내"), C("납품 내역 및 관리 사항")],
 ], [55 * mm, 110 * mm], head=True))
 
-a(Spacer(1, 8 * mm))
+a(Spacer(1, 5 * mm))
 a(P("제작 · 운영 문의<br/>"
     "<b>이이공이 (2202)</b> · 010-9956-9545 · kookacola@naver.com", st_note))
 
-a(Spacer(1, 6 * mm))
+a(Spacer(1, 4 * mm))
 a(P("사단법인 한국온라인해외직판협회 · 고유번호 830-82-00824<br/>"
     "(04553) 서울특별시 중구 수표로10길 5-5, 601호", st_foot))
 
