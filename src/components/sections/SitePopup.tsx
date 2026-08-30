@@ -113,7 +113,13 @@ export function SitePopup({ popup }: { popup: PopupData }) {
         className="absolute inset-0 -z-10 h-full w-full cursor-default bg-brand-950/70"
       />
 
-      <div className="relative w-full max-w-sm overflow-hidden rounded-card bg-page shadow-[0_24px_60px_rgba(10,13,18,0.35)]">
+      {/*
+        max-w-sm(384px)에서 max-w-md(448px)로 넓혔습니다. 정사각형 이미지에
+        행사 정보를 담으면 384px 로는 글자가 너무 작아집니다.
+        모바일에서는 화면 폭에서 좌우 여백(p-5)을 뺀 값이 먼저 걸려
+        이 값과 무관하게 동작합니다.
+      */}
+      <div className="relative w-full max-w-md overflow-hidden rounded-card bg-page shadow-[0_24px_60px_rgba(10,13,18,0.35)]">
         <button
           ref={closeRef}
           type="button"
