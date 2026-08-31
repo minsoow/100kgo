@@ -4,6 +4,7 @@ import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
+import { TableKit } from "@tiptap/extension-table";
 import { upload } from "@vercel/blob/client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -212,6 +213,53 @@ function Toolbar({ editor }: { editor: Editor }) {
 
       <span aria-hidden className="mx-1 h-5 w-px bg-line" />
 
+      {/*
+        표. 커서가 표 안에 있을 때만 행·열 버튼을 보여 줍니다.
+        항상 다 띄우면 버튼이 여덟 개로 늘어 툴바가 어지럽습니다.
+      */}
+      <ToolbarButton
+        label="표"
+        title="표 넣기 (2줄 3칸)"
+        onClick={() =>
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows: 3, cols: 2, withHeaderRow: true })
+            .run()
+        }
+      />
+      {editor.isActive("table") && (
+        <>
+          <ToolbarButton
+            label="＋행"
+            title="아래에 행 추가"
+            onClick={() => editor.chain().focus().addRowAfter().run()}
+          />
+          <ToolbarButton
+            label="－행"
+            title="현재 행 삭제"
+            onClick={() => editor.chain().focus().deleteRow().run()}
+          />
+          <ToolbarButton
+            label="＋칸"
+            title="오른쪽에 칸 추가"
+            onClick={() => editor.chain().focus().addColumnAfter().run()}
+          />
+          <ToolbarButton
+            label="－칸"
+            title="현재 칸 삭제"
+            onClick={() => editor.chain().focus().deleteColumn().run()}
+          />
+          <ToolbarButton
+            label="표 삭제"
+            title="표 전체 삭제"
+            onClick={() => editor.chain().focus().deleteTable().run()}
+          />
+        </>
+      )}
+
+      <span aria-hidden className="mx-1 h-5 w-px bg-line" />
+
       <ToolbarButton
         label={uploading ? "올리는 중…" : "🖼 이미지"}
         title="본문에 이미지 넣기"
@@ -258,6 +306,18 @@ export function RichTextEditor({ name, defaultValue = "" }: RichTextEditorProps)
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       // 본문 삽입 이미지. sanitize 는 img 의 src·alt·width·height 만 통과시킵니다.
       Image.configure({ inline: false, allowBase64: false }),
+      /*
+        표.
+
+        ⚠️ 이 확장이 없으면 표가 들어 있는 글을 편집 화면에서 여는 순간
+        Tiptap 스키마가 <table> 을 인식하지 못해 문단으로 풀어헤칩니다.
+        그대로 저장하면 표가 영구히 사라집니다. 실제로 2026-08-31 에
+        협회가 모집공고를 열었다가 표 3개가 무너진 사고가 있었습니다.
+
+        sanitize 는 이미 table/thead/tbody/tr/th/td 를 허용하고,
+        prose-board 에도 표 스타일이 있어 저장·표시 쪽은 그대로 둡니다.
+      */
+      TableKit.configure({ table: { resizable: false } }),
     ],
     content: defaultValue,
     editorProps: {
