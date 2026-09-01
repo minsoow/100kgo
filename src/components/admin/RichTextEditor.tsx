@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import { TableKit } from "@tiptap/extension-table";
+import { Indent } from "./IndentExtension";
 import { upload } from "@vercel/blob/client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -213,6 +214,19 @@ function Toolbar({ editor }: { editor: Editor }) {
 
       <span aria-hidden className="mx-1 h-5 w-px bg-line" />
 
+      <ToolbarButton
+        label="→| 들여쓰기"
+        title="들여쓰기 (Tab)"
+        onClick={() => editor.chain().focus().indent().run()}
+      />
+      <ToolbarButton
+        label="|← 내어쓰기"
+        title="내어쓰기 (Shift+Tab)"
+        onClick={() => editor.chain().focus().outdent().run()}
+      />
+
+      <span aria-hidden className="mx-1 h-5 w-px bg-line" />
+
       {/*
         표. 커서가 표 안에 있을 때만 행·열 버튼을 보여 줍니다.
         항상 다 띄우면 버튼이 여덟 개로 늘어 툴바가 어지럽습니다.
@@ -318,6 +332,8 @@ export function RichTextEditor({ name, defaultValue = "" }: RichTextEditorProps)
         prose-board 에도 표 스타일이 있어 저장·표시 쪽은 그대로 둡니다.
       */
       TableKit.configure({ table: { resizable: false } }),
+      // 문단 들여쓰기. 공백으로는 HTML 에서 들여쓰기가 되지 않습니다.
+      Indent,
     ],
     content: defaultValue,
     editorProps: {

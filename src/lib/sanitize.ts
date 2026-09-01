@@ -41,6 +41,12 @@ export function sanitizePostContent(dirty: string): string {
     allowedStyles: {
       "*": {
         "text-align": [/^left$/, /^right$/, /^center$/, /^justify$/],
+        /*
+          문단 들여쓰기(IndentExtension). 값을 자유롭게 두면 임의의 CSS 가
+          들어올 수 있으므로 rem 단위 숫자만 통과시킵니다.
+          에디터는 1.5rem 단위로 6단계까지만 만듭니다.
+        */
+        "margin-left": [/^\d+(\.\d+)?rem$/],
       },
     },
     allowedSchemes: ["http", "https", "mailto"],
