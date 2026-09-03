@@ -28,8 +28,11 @@ export const metadata: Metadata = {
     default: `${association.nameShort} | 대한민국 10만 해외직판상 시대를 엽니다`,
     template: `%s | ${association.nameShort}`,
   },
+  // 협회가 네이버 서치어드바이저 보완사항으로 요청한 문구입니다(2026-09-03).
+  // openGraph.description 을 따로 지정하지 않으면 Next 가 이 값을 그대로
+  // og:description 에도 쓰므로, 홈에서는 이 한 줄만 바꾸면 둘 다 반영됩니다.
   description:
-    "한국온라인해외직판협회는 해외 소비자에게 직접 판매하는 해외직판을 대한민국의 새로운 성장 전략으로 제시합니다. 전문인재 양성, 현지화 자사몰 구축, AI 글로벌 마케팅을 지원하는 실행형 협회입니다.",
+    "중소벤처기업부 인가 (사)한국온라인해외직판협회. 해외직판 인재양성, 자사몰 구축 및 중소상공인의 글로벌 진출을 지원합니다.",
   keywords: [
     "해외직판",
     "한국온라인해외직판협회",
