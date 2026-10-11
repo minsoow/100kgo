@@ -1,6 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { association, navItems, BOARD_LABEL } from "@/content/association";
+import {
+  association,
+  navItems,
+  relatedAgencies,
+  BOARD_LABEL,
+} from "@/content/association";
 import { resolveContent } from "@/lib/content-utils";
 
 const contactRows = [
@@ -99,7 +104,39 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-t border-white/12 pt-8 text-[13px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 border-t border-white/12 pt-10">
+          <p className="text-[12px] tracking-[0.18em] text-white/40">
+            관련기관
+          </p>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            {relatedAgencies.map((agency) => (
+              <a
+                key={agency.name}
+                href={agency.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${agency.name} 홈페이지 (새 창 열림)`}
+                className="inline-flex items-center rounded-lg bg-white px-4 py-2.5 transition-opacity hover:opacity-85"
+              >
+                {/*
+                  next/image 는 svg 를 기본적으로 최적화 대상에서 제외합니다
+                  (next.config 에 dangerouslyAllowSVG 설정 필요). 두 로고 다
+                  작은 정적 파일이라 그냥 img 로 그대로 둡니다.
+                */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={agency.logo}
+                  alt={agency.name}
+                  width={agency.width}
+                  height={agency.height}
+                  className="h-6 w-auto md:h-7"
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/12 pt-8 text-[13px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {association.nameFull}. All rights
             reserved.

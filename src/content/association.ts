@@ -40,6 +40,32 @@ export const association = {
 } as const;
 
 /**
+ * 푸터 "관련기관" 로고 (협회 요청, 2026-10-12).
+ *
+ * 로고 파일은 각 기관 공식 홈페이지에서 받았습니다
+ * (public/images/logo-mss.svg, logo-nts.png). 원본이 남색·빨강 등
+ * 진한 색이라 어두운 푸터 배경 위에 그대로 두면 잘 안 보여서, Footer 에서
+ * 흰 배지로 감싸 올립니다.
+ */
+export const relatedAgencies = [
+  {
+    name: "중소벤처기업부",
+    logo: "/images/logo-mss.svg",
+    href: "https://www.mss.go.kr",
+    // svg 원본 비율(206×42)을 지키기 위한 값. 배지 높이를 바꾸면 같이 조정
+    width: 206,
+    height: 42,
+  },
+  {
+    name: "국세청",
+    logo: "/images/logo-nts.png",
+    href: "https://www.nts.go.kr",
+    width: 112,
+    height: 44,
+  },
+] as const;
+
+/**
  * 게시판 명칭.
  *
  * 게시판은 1개이고 카테고리(지원사업정보센터/공지사항/재무고시)로만 나뉩니다.
