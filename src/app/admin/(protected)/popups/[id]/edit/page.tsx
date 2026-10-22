@@ -1,21 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPopup } from "@/lib/db/queries";
+import { toKstInputValue } from "@/lib/format";
 import { PopupForm } from "@/components/admin/PopupForm";
-
-/**
- * datetime-local 입력은 "YYYY-MM-DDTHH:mm" 형식만 받습니다.
- * toISOString() 은 UTC 로 바꿔 버려 한국 시각과 9시간 어긋나므로,
- * 로컬 시각 그대로 조립합니다.
- */
-function toDateTimeLocal(value: Date | null): string {
-  if (!value) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return (
-    `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())}` +
-    `T${pad(value.getHours())}:${pad(value.getMinutes())}`
-  );
-}
 
 export default async function EditPopupPage({
   params,
@@ -45,8 +32,8 @@ export default async function EditPopupPage({
           imageAlt: popup.imageAlt ?? "",
           linkUrl: popup.linkUrl ?? "",
           isActive: popup.isActive,
-          startsAt: toDateTimeLocal(popup.startsAt),
-          endsAt: toDateTimeLocal(popup.endsAt),
+          startsAt: toKstInputValue(popup.startsAt),
+          endsAt: toKstInputValue(popup.endsAt),
         }}
       />
     </div>

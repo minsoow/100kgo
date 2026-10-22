@@ -13,6 +13,17 @@ import { NewsPreview } from "@/components/sections/NewsPreview";
 import { SitePopup } from "@/components/sections/SitePopup";
 import { getActivePopup } from "@/lib/db/queries";
 
+/*
+  홈은 정적으로 캐시되는데, 팝업 노출 여부는 "지금이 노출 기간 안인가"로
+  결정됩니다. 캐시를 만든 시점에 한 번 계산되고 끝나면, 시작 시각이 나중인
+  예약 팝업은 그 시각이 와도 페이지가 다시 만들어지지 않아 영원히 안 뜨고,
+  종료된 팝업도 계속 남습니다(2026-10-22 신고).
+
+  5분마다 다시 만들게 해서 예약·종료가 최대 몇 분 안에 반영됩니다.
+  관리자에서 저장·켜기·끄기를 하면 revalidatePath("/") 로 즉시 갱신됩니다.
+*/
+export const revalidate = 300;
+
 function NewsSkeleton() {
   return (
     <div className="container-page py-24 md:py-32">

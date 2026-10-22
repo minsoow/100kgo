@@ -17,6 +17,7 @@ import { attachments, popups, posts } from "@/lib/db/schema";
 import { sanitizePostContent } from "@/lib/sanitize";
 import { extractBlobImageUrls, parseAttachmentsField } from "@/lib/attachments";
 import { deleteBlobs } from "@/lib/blob";
+import { parseKstInput } from "@/lib/format";
 import type { ActionState } from "@/lib/action-state";
 
 /* ---------------------------------- 로그인 --------------------------------- */
@@ -228,13 +229,13 @@ export async function deletePostAction(formData: FormData): Promise<void> {
 
 /**
  * 날짜 입력(datetime-local)은 값이 없을 수 있고, 있으면 "2026-08-31T09:00"
- * 형태의 로컬 시각 문자열입니다. 빈 문자열은 "지정 안 함"으로 봅니다.
+ * 형태입니다. 빈 문자열은 "지정 안 함"으로 봅니다.
+ *
+ * 한국 시각으로 해석해야 합니다(lib/format.ts 주석 참고). 시간대 표시 없이
+ * new Date() 에 넘기면 서버(UTC) 기준으로 읽혀 9시간 늦게 저장됩니다.
  */
 function parseDateField(raw: FormDataEntryValue | null): Date | null {
-  const value = typeof raw === "string" ? raw.trim() : "";
-  if (!value) return null;
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date;
+  return parseKstInput(typeof raw === "string" ? raw : "");
 }
 
 const popupSchema = z
